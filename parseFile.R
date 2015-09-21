@@ -15,29 +15,44 @@ dateCalories <- calorieXML[["chart_data"]][[1]] %>%
 # extract calories
 calories <- calorieXML[["chart_data"]][[2]] %>%
         unlist(., use.names = FALSE) %>%
-        .[-1] %>%
-        as.numeric(.)
+        .[-1] # remove row name
 
-# create data frame
+# create calories data frame
 caloriesDF <- cbind(dateCalories, calories)
 
-# parse calories burned data
+
+## parse calories burned data
+# load XML
 caloriesBurnedData <- xmlTreeParse("caloriesBurned90.xml")
 caloriesBurnedXML <- xmlToList(caloriesBurnedData)
-dateCaloriesBurned <- caloriesBurnedXML[['chart_data']][[1]]
-dateCaloriesBurned <- unlist(dateCaloriesBurned, use.names = FALSE)
-caloriesBurned <- caloriesBurnedXML[['chart_data']][[2]]
-caloriesBurned <- unlist(caloriesBurned, use.names = FALSE)
-caloriesBurned <- as.numeric(caloriesBurned[-1])
+
+# extract date
+dateCaloriesBurned <- caloriesBurnedXML[["chart_data"]][[1]] %>%
+        unlist(., use.names = FALSE)
+        
+# extract calories burned
+caloriesBurned <- caloriesBurnedXML[["chart_data"]][[2]] %>%
+        unlist(., use.names = FALSE) %>%
+        .[-1] # remove row name
+        
+# create calories burned data frame
 caloriesBurnedDF <- cbind(dateCaloriesBurned, caloriesBurned)
 
-# parse weight data
+
+## parse weight data
+# load XML
 weightData <- xmlParse("progress90.xml")
-weightsXML <- xmlToList(weightData)
-date <- weightsXML[[5]][[1]]
-date <- unlist(date, use.names = FALSE)
-weights <- weightsXML[[5]][[2]]
-weights <- unlist(weights, use.names = FALSE)
-weights <- as.numeric(weights[2:91])
-weightDF <- cbind(date, weights)
+weightXML <- xmlToList(weightData)
+
+# extract date
+dateWeight <- weightXML[["chart_data"]][[1]] %>%
+        unlist(., use.names = FALSE)
+
+# extract date
+weight <- weightXML[["chart_data"]][[2]] %>%
+        unlist(., use.names = FALSE) %>%
+        .[-1] # remove row name
+
+# create weight data frame
+weightDF <- cbind(dateWeight, weight)
 
