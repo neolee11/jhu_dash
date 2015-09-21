@@ -1,11 +1,11 @@
 # init
-setwd("~/Documents/DaSH")
+# setwd("~/Documents/DaSH")
 library(XML)
 library(magrittr)
 
 ## parse calorie data
 # load XML
-calorieData <- xmlParse("calories90.xml")
+calorieData <- xmlParse("data/calories90.xml")
 calorieXML <- xmlToList(calorieData)
 
 # extract date
@@ -23,7 +23,7 @@ caloriesDF <- cbind(dateCalories, calories)
 
 ## parse calories burned data
 # load XML
-caloriesBurnedData <- xmlTreeParse("caloriesBurned90.xml")
+caloriesBurnedData <- xmlTreeParse("data/caloriesBurned90.xml")
 caloriesBurnedXML <- xmlToList(caloriesBurnedData)
 
 # extract date
