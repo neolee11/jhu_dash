@@ -36,23 +36,43 @@ titles<-html_nodes(hout,'#date , thead .first') %>%
 	html_text()
 
 
-last_date<-NA
+lastDate<-NA
 counter<-0
 for(i in 1:length(titles)){
 	ti <- titles[i] 
 
 	if(! ti %in%c('Foods','Exercises')){
-		last_date <- as.Date(ti, format = '%B %d,%Y')
+		lastDate <- as.Date(ti, format = '%B %d,%Y')
 		next
 	}
 
 	#if not a date, then it's a table
 	counter <- counter + 1
-	dates[counter] <- as.Date(last_date)
+	dates[counter] <- as.Date(lastDate)
 }
 
 data.frame(dates,isFood,isExercise)
 
 names(tab)
+
+
+
+lastMeal<-NA
+counter<-0
+for(i in 1:length(titles)){
+	ti <- titles[i] 
+
+	if(! ti %in%c('Foods','Exercises')){
+		lastMeal <- as.Date(ti, format = '%B %d,%Y')
+		next
+	}
+
+	#if not a date, then it's a table
+	counter <- counter + 1
+	lastMeal)
+}
+
+
+
 
 
