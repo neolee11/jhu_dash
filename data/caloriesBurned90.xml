@@ -2,7 +2,7 @@
 <chart>
   <license>I1X37UPVC2NL.NS5T4Q79KLYCK07EK</license>
   <axis_category font="arial" bold="true" size="12" color="333333" orientation="diagonal_up" skip="4"></axis_category>
-  <axis_value font="arial" bold="true" size="14" color="333333" skip="4" separator="," min="0.0" max="1700.0"></axis_value>
+  <axis_value font="arial" bold="true" size="14" color="333333" skip="4" separator="," min="0.0" max="3900.0"></axis_value>
   <chart_border color="000000" top_thickness="1" bottom_thickness="2" left_thickness="0" right_thickness="0"></chart_border>
   <chart_data>
     <row>
