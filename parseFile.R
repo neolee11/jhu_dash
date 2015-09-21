@@ -26,15 +26,13 @@ caloriesDF <- cbind(dateCalories, calories)
 caloriesBurnedData <- xmlTreeParse("data/caloriesBurned90.xml")
 caloriesBurnedXML <- xmlToList(caloriesBurnedData)
 
-# extract date
-dateCaloriesBurned <- caloriesBurnedXML[["chart_data"]][[1]] %>%
-        unlist(., use.names = FALSE)
-        
-# extract calories burned
-caloriesBurned <- caloriesBurnedXML[["chart_data"]][[2]] %>%
-        unlist(., use.names = FALSE) %>%
-        .[-1] # remove row name
-        
+caloriesBurnedChart <- caloriesBurnedXML$chart_data[-1,]
+colnames(caloriesBurnedChart)<-c('date','caloriesBurned')
+rownames(caloriesBurnedChart)<-c()
+caloriesBurnedDF<-data.frame(caloriesBurnedChart)
+caloriesBurnedDF$caloriesBurned <- as.numeric(caloriesBurnedDF$caloriesBurned)
+
+
 # create calories burned data frame
 caloriesBurnedDF <- cbind(dateCaloriesBurned, caloriesBurned)
 
