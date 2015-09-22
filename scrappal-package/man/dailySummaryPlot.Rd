@@ -5,7 +5,7 @@
 \title{Generate summary plots from user data}
 \usage{
 dailySummaryPlot(dataTable, outcome = "calories", alsoMeal = FALSE,
-  title = paste("daily intake of", outcome))
+  recommended = NULL, title = paste("daily intake of", outcome))
 }
 \arguments{
 \item{dataTable}{a table of food or exercise elements from \code{\link{scrappal}}}

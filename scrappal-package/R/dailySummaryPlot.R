@@ -26,7 +26,7 @@
 #'
 #'}
 
-dailySummaryPlot <- function(dataTable, outcome='calories', alsoMeal=FALSE, title=paste('daily intake of',outcome)){
+dailySummaryPlot <- function(dataTable, outcome='calories', alsoMeal=FALSE, recommended=NULL, title=paste('daily intake of',outcome)){
 
 	#If needed, add weekday column
 	if(!'weekday' %in% colnames(dataTable)){
@@ -51,17 +51,26 @@ dailySummaryPlot <- function(dataTable, outcome='calories', alsoMeal=FALSE, titl
 		ggplot(., aes_string(y='total_y',x='weekday',fill='meal')) + geom_boxplot() 
 	}
 	if(!alsoMeal){
+		rLine <- NULL
+		if(!is.null(recommended)) rLine <- geom_abline(intercept = recommended,slope=0, lty=2, lwd=.7,col='darkgreen')
+			
 		out <- group_by(dt2, day) %>%
 		summarize(total_y = sum(outcomeVar),
 			weekday = head(weekday,1)) %>%
-		ggplot(., aes_string(y='total_y',x='weekday')) + geom_boxplot() 
+		ggplot(., aes_string(y='total_y',x='weekday')) + geom_boxplot() + rLine
 	}
 
+	uText<-''
+	if(outcome %in% as.character(foodUnits$type)){
+		outcomeUnits <- as.character(foodUnits$unit[which(foodUnits$type==outcome)])
+		if(!is.na(outcomeUnits)) uText<-paste0('(',outcomeUnits,')')
+	}
 
 	out<- out  +
-		labs(y=outcome,title=title) +
+		labs(y=paste(outcome,uText),title=title) +
 		theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 	out
 
 }
+

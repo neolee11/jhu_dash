@@ -1,5 +1,6 @@
 #A script for building & updating the R package
 
+# rm(list=ls())
 
 library('roxygen2')
 library('devtools')
@@ -8,6 +9,8 @@ library('devtools')
 packagePath <- 'scrappal-package'
 #create(scrappal) #only do this once 
 # use_travis(packagePath)
+# foodUnits<-read.csv('units.csv', stringsAsFactors=FALSE)
+# devtools::use_data(foodUnits,foodUnits,pkg=packagePath)
 
 ## Create the documentation fresh
 document(packagePath)
@@ -20,4 +23,7 @@ install(packagePath)
 ## Check the help
 library(scrappal)
 help(package='scrappal')
+
+
+
  
