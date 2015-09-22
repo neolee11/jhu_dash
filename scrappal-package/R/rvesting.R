@@ -7,7 +7,7 @@
 #' @param toDate date to stop gathering R data. Should have class "Date"
 #' @param verbose  whether to print progress 
 #' @export
-#' @import rvest
+#' @import rvest dplyr
 #' @return A list containing all exercises and all food items eaten
 #' @examples \dontrun{
 #' username = 'funchords'
@@ -187,6 +187,7 @@ allExercise
 return(list(food = allFood, exercise = allExercise))
 
 }
+
 
 
 
