@@ -4,8 +4,8 @@
 \alias{scrappal}
 \title{Scrape data from my fitness pal}
 \usage{
-scrappal(username = "bcaffo", fromDate, toDate,
-  verbose = getOption("verbose"), includeDailyCal = TRUE)
+scrappal(username = "bcaffo", fromDate, toDate, includeDailyCal = FALSE,
+  verbose = getOption("verbose"))
 }
 \arguments{
 \item{username}{for person of interest}
@@ -14,10 +14,12 @@ scrappal(username = "bcaffo", fromDate, toDate,
 
 \item{toDate}{date to stop gathering R data. Should have class "Date"}
 
+\item{includeDailyCal}{whether to include an additional (redundant) table showing the calories burned and consumed on each day.}
+
 \item{verbose}{whether to print progress}
 }
 \value{
-A list containing tables of: all exercises, all food items eaten, and the calories burned and consumed on every day.
+A list containing tables of: all exercises, all food items eaten, and (optionally) the calories burned and consumed on each day.
 }
 \description{
 Scrape data from my fitness pal
@@ -31,7 +33,8 @@ toDate =   as.Date('2015-08-10','\%Y-\%m-\%d')
 z<-scrappal(
 		username = username,
 		fromDate = fromDate,
-		toDate = toDate
+		toDate = toDate,
+		includeDailyCal = TRUE
 		)
 
 ### Show food labels separately, because they're large

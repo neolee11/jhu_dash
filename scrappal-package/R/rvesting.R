@@ -5,10 +5,11 @@
 #' @param username for person of interest
 #' @param fromDate date to start gathering R data. Should have class "Date"
 #' @param toDate date to stop gathering R data. Should have class "Date"
+#' @param includeDailyCal whether to include an additional (redundant) table showing the calories burned and consumed on each day.
 #' @param verbose  whether to print progress 
 #' @export
 #' @import rvest dplyr
-#' @return A list containing tables of: all exercises, all food items eaten, and the calories burned and consumed on every day.
+#' @return A list containing tables of: all exercises, all food items eaten, and (optionally) the calories burned and consumed on each day.
 #' @examples \dontrun{
 #' username = 'funchords'
 #' fromDate = as.Date('2015-08-01','%Y-%m-%d')
@@ -17,7 +18,8 @@
 #' z<-scrappal(
 #' 		username = username,
 #' 		fromDate = fromDate,
-#' 		toDate = toDate
+#' 		toDate = toDate,
+#'		includeDailyCal = TRUE
 #' 		)
 #'
 #' ### Show food labels separately, because they're large
@@ -29,7 +31,7 @@
 #' z$dailyCal
 #'
 #'}
-scrappal <- function(username='bcaffo', fromDate, toDate, verbose=getOption('verbose'), includeDailyCal = TRUE){
+scrappal <- function(username='bcaffo', fromDate, toDate, includeDailyCal = FALSE, verbose=getOption('verbose')){
 
 
 
