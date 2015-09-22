@@ -11,7 +11,8 @@
 #' @import rvest dplyr
 #' @return A list containing tables of: all exercises, all food items eaten, and (optionally) the calories burned and consumed on each day. In the food table, cholest and sodium are reported in mg. All other nutritional values (except calories) are reported in grams. 
 #' @examples \dontrun{
-#' username = 'funchords'
+#' username = 'scrappal'
+#' password = 'dash2015'
 #' fromDate = as.Date('2015-08-01','%Y-%m-%d')
 #' toDate =   as.Date('2015-08-10','%Y-%m-%d')
 #' 
@@ -19,6 +20,7 @@
 #' 		username = username,
 #' 		fromDate = fromDate,
 #' 		toDate = toDate,
+#'		password = password,
 #'		includeDailyCal = TRUE
 #' 		)
 #'
@@ -31,7 +33,7 @@
 #' z$dailyCal
 #'
 #'}
-scrappal <- function(username='bcaffo', fromDate, toDate, includeDailyCal = FALSE, verbose=getOption('verbose')){
+scrappal <- function(username, fromDate, toDate, includeDailyCal = FALSE, password=NULL, verbose=getOption('verbose')){
 
 
 
@@ -40,26 +42,42 @@ scrappal <- function(username='bcaffo', fromDate, toDate, includeDailyCal = FALS
 ############
 # Retrieve data
 
+palUrlData<-paste0('http://www.myfitnesspal.com/reports/printable_diary/',username,'?from=',
+	as.character(fromDate, format='%Y-%m-%d'),
+	'&to=',
+	as.character(toDate,   format='%Y-%m-%d')
+	)
+
+if(is.null(password)){
+	sessionIn<-html_session(palUrlData)
+
+	privateAccount<-grepl('not allowing others to view',html_text(html(sessionIn)))
+	if(privateAccount) stop('Cannot access information without user password.')
+}else{
+	#If we have a password, first go to login page, then go to diary page.
+	message('logging in...')
+	session<-html_session('https://www.myfitnesspal.com/account/login')
+	form_login_blank <- html_form(html(session))[[1]]
+	form_login_filled <- set_values(form_login_blank, username = username, password =  password)
+	sessionIn<-submit_form(session,form_login_filled)
+
+	wrongPassword<-grepl('Incorrect username or password.',html_text(html(sessionIn)))
+	if(wrongPassword) stop('Incorrect username or password.')
+}
+
+
 if(verbose) message('retrieving data from my fitness pal...')
 
-session<-html_session(paste0('http://www.myfitnesspal.com/reports/printable_diary/',username))
 
-form_blank <- html_form(html(session))[[1]]
-form_filled <- set_values(form_blank,
-	from = as.character(fromDate, format='%Y-%m-%d'),
-  	to =   as.character(toDate,   format='%Y-%m-%d'))
-form_output<-submit_form(session,form_filled)
+sessionPalData<-jump_to(sessionIn,url=palUrlData)
+tab<-html_table(sessionPalData,header=TRUE) #gets tables
 
-if(verbose) message('reformatting data...')
-
-tab<-html_table(form_output,header=TRUE) #gets tables
-
-hOut<-html(form_output) #gets in html form
-titles<-html_nodes(hOut,'#date , thead .first') %>%
+hData<-html(sessionPalData) #gets in html form
+titles<-html_nodes(hData,'#date , thead .first') %>%
 	html_text()
 # print(object.size(tab),units='Mb')
 
-# xOut<-xmlTreeParse(form_output) #in xml form, not currently used.
+# xData<-xmlTreeParse(sessionPalData) #in xml form, not currently used.
 
 
 #!!?? Do we need to "close" the `session` object? What do you think Daniel?
@@ -98,7 +116,7 @@ for(i in 1:length(titles)){
 }
 
 #In-console summary of the tables we've retrieved
-as.tbl(data.frame(dates,isFood,isExercise))
+# as.tbl(data.frame(dates,isFood,isExercise))
 
 
 
@@ -158,11 +176,10 @@ for(i in 1:length(tab)){
 colnames(allFood) <- tolower(colnames(allFood))
 allFood$username <- username
 
-allFood <- as.tbl(allFood)
-allFood[,-1]
-allFood[,1]
-
-unlist(lapply(allFood, class))
+# allFood <- as.tbl(allFood)
+# allFood[,-1]
+# allFood[,1]
+# unlist(lapply(allFood, class))
 
 allExercise<-data.frame()
 for(i in 1:length(tab)){
@@ -176,30 +193,32 @@ colnames(allExercise) <- tolower(colnames(allExercise))
 colnames(allExercise)[which(colnames(allExercise)=='exercise_type')] <- 'exerciseType'
 allExercise <- as.tbl(allExercise)
 
-allExercise
+# allExercise
 
 
 
 dailyCal <- NULL
-if(includeDailyCal){
-	posCal <- group_by(allFood, day) %>%
-	summarise(calories = sum(calories))
-	negCal <- group_by(allExercise, day) %>%
-	summarise(calories = sum(calories))
 
-	dailyCal <- merge(posCal, negCal, by ='day', suffixes = c('Pos','Neg')) %>%
-		as.tbl
-	names(dailyCal)<-c('day','posCalories','negCalories')
-	dailyCal <- mutate(dailyCal,netCalories = posCalories - negCalories) #what exactly are "fitbit adjustements"?? 
+dailyCalPossible<-all(
+	c(nrow(allFood),nrow(allExercise))>0
+	)
+
+if(includeDailyCal){
+	if(dailyCalPossible){
+		posCal <- group_by(allFood, day) %>%
+		summarise(calories = sum(calories))
+		negCal <- group_by(allExercise, day) %>%
+		summarise(calories = sum(calories))
+
+		dailyCal <- merge(posCal, negCal, by ='day', suffixes = c('Pos','Neg')) %>%
+			as.tbl
+		names(dailyCal)<-c('day','posCalories','negCalories')
+		dailyCal <- mutate(dailyCal,netCalories = posCalories - negCalories) #what exactly are "fitbit adjustements"?? 
+	}else{
+		warnings('dailyCal table was not created. Not possible to combine exercise and food tables, as one is empty.')
+	}
 }
 
-
-#How to identify common activities:
-#1) concatenate all labels
-#2) split into words
-#3) table words
-#4) use grep to find words in activity names
-#Problem: will also return words like "the", "mph", "pace", etc. Ignore this issue for now??
 
 
 return(list(food = allFood, exercise = allExercise, dailyCal = dailyCal))

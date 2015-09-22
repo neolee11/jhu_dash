@@ -4,8 +4,8 @@
 \alias{scrappal}
 \title{Scrape data from my fitness pal}
 \usage{
-scrappal(username = "bcaffo", fromDate, toDate, includeDailyCal = FALSE,
-  verbose = getOption("verbose"))
+scrappal(username, fromDate, toDate, includeDailyCal = FALSE,
+  password = NULL, verbose = getOption("verbose"))
 }
 \arguments{
 \item{username}{for person of interest}
@@ -26,7 +26,8 @@ Scrape data from my fitness pal
 }
 \examples{
 \dontrun{
-username = 'funchords'
+username = 'scrappal'
+password = 'dash2015'
 fromDate = as.Date('2015-08-01','\%Y-\%m-\%d')
 toDate =   as.Date('2015-08-10','\%Y-\%m-\%d')
 
@@ -34,6 +35,7 @@ z<-scrappal(
 		username = username,
 		fromDate = fromDate,
 		toDate = toDate,
+		password = password,
 		includeDailyCal = TRUE
 		)
 

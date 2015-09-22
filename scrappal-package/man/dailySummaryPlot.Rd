@@ -23,7 +23,7 @@ Generate summary plots from user data
 \examples{
 \dontrun{
 
-username = 'funchords'
+username = 'scrappal'
 fromDate = as.Date('2015-08-01','\%Y-\%m-\%d')
 toDate =   as.Date('2015-08-10','\%Y-\%m-\%d')
 
