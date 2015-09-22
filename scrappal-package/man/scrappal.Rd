@@ -5,7 +5,7 @@
 \title{Scrape data from my fitness pal}
 \usage{
 scrappal(username = "bcaffo", fromDate, toDate,
-  verbose = getOption("verbose"))
+  verbose = getOption("verbose"), includeDailyCal = TRUE)
 }
 \arguments{
 \item{username}{for person of interest}
@@ -17,7 +17,7 @@ scrappal(username = "bcaffo", fromDate, toDate,
 \item{verbose}{whether to print progress}
 }
 \value{
-A list containing all exercises and all food items eaten
+A list containing tables of: all exercises, all food items eaten, and the calories burned and consumed on every day.
 }
 \description{
 Scrape data from my fitness pal
@@ -40,6 +40,7 @@ z$food[1:10,1]
 z$food[,-1]
 
 z$exercise
+z$dailyCal
 
 }
 }
