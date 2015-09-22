@@ -21,7 +21,8 @@
 #'
 #' dailySummaryPlot(dataTable=z$food, outcome='calories', alsoMeal=FALSE)
 #' dailySummaryPlot(dataTable=z$food, outcome='fat', alsoMeal=TRUE)
-#' dailySummaryPlot(dataTable=z$exercise, outcome='calories', alsoMeal=FALSE, title=paste(outcome,'burned'))
+#' dailySummaryPlot(dataTable=z$exercise, outcome='calories', alsoMeal=FALSE, title='calories burned')
+#' dailySummaryPlot(dataTable=z$exercise, outcome='minutes', alsoMeal=FALSE, title='exercise per day (minutes)')
 #'
 #'}
 
