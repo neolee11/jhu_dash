@@ -31,7 +31,7 @@ dailySummaryPlot <- function(dataTable, outcome='calories', alsoMeal=FALSE, titl
 	#If needed, add weekday column
 	if(!'weekday' %in% colnames(dataTable)){
 		dataTable<- mutate(dataTable,
-			weekday = weekdays(day))
+			weekday = factor(weekdays(day),levels= c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")))
 	}
 	if(!'yearMonth' %in% colnames(dataTable)){
 		dataTable<- mutate(dataTable,
@@ -58,7 +58,9 @@ dailySummaryPlot <- function(dataTable, outcome='calories', alsoMeal=FALSE, titl
 	}
 
 
-	out<- out+ labs(y=outcome,title=title)
+	out<- out  +
+		labs(y=outcome,title=title) +
+		theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 	out
 
