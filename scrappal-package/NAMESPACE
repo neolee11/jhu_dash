@@ -3,4 +3,5 @@
 export(dailySummaryPlot)
 export(scrappal)
 import(dplyr)
+import(ggplot2)
 import(rvest)

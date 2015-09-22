@@ -3,7 +3,8 @@
 #' @param dataTable a table of food or exercise elements from \code{\link{scrappal}}
 #' @param outcome a column name of dataTable to put on y axis
 #' @param alsoMeal should we also break it down by meal
-#' @export
+#' @export 
+#' @import ggplot2 dplyr
 #' @return a plot to be used in a shiny app
 #' @examples \dontrun{
 #'
