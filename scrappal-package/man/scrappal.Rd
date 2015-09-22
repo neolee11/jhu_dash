@@ -19,7 +19,7 @@ scrappal(username = "bcaffo", fromDate, toDate, includeDailyCal = FALSE,
 \item{verbose}{whether to print progress}
 }
 \value{
-A list containing tables of: all exercises, all food items eaten, and (optionally) the calories burned and consumed on each day.
+A list containing tables of: all exercises, all food items eaten, and (optionally) the calories burned and consumed on each day. In the food table, cholest and sodium are reported in mg. All other nutritional values (except calories) are reported in grams.
 }
 \description{
 Scrape data from my fitness pal

@@ -9,7 +9,7 @@
 #' @param verbose  whether to print progress 
 #' @export
 #' @import rvest dplyr
-#' @return A list containing tables of: all exercises, all food items eaten, and (optionally) the calories burned and consumed on each day.
+#' @return A list containing tables of: all exercises, all food items eaten, and (optionally) the calories burned and consumed on each day. In the food table, cholest and sodium are reported in mg. All other nutritional values (except calories) are reported in grams. 
 #' @examples \dontrun{
 #' username = 'funchords'
 #' fromDate = as.Date('2015-08-01','%Y-%m-%d')
@@ -174,7 +174,6 @@ for(i in 1:length(tab)){
 }
 colnames(allExercise) <- tolower(colnames(allExercise))
 colnames(allExercise)[which(colnames(allExercise)=='exercise_type')] <- 'exerciseType'
-allExercise$calories <- -1 * abs(allExercise$calories)
 allExercise <- as.tbl(allExercise)
 
 allExercise
@@ -191,7 +190,7 @@ if(includeDailyCal){
 	dailyCal <- merge(posCal, negCal, by ='day', suffixes = c('Pos','Neg')) %>%
 		as.tbl
 	names(dailyCal)<-c('day','posCalories','negCalories')
-	dailyCal <- mutate(dailyCal,sumCalories = posCalories + negCalories) 
+	dailyCal <- mutate(dailyCal,netCalories = posCalories - negCalories) #what exactly are "fitbit adjustements"?? 
 }
 
 
@@ -200,7 +199,7 @@ if(includeDailyCal){
 #2) split into words
 #3) table words
 #4) use grep to find words in activity names
-#Problem: will also return words like "the", "mph", "pace", etc. Ignore this issue for now?
+#Problem: will also return words like "the", "mph", "pace", etc. Ignore this issue for now??
 
 
 return(list(food = allFood, exercise = allExercise, dailyCal = dailyCal))
