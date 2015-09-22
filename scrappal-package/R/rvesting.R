@@ -4,11 +4,11 @@
 #'
 #' @param username for person of interest
 #' @param fromDate date to start gathering R data. Should have class "Date"
-#' @param toDate verbose whether to print progress
+#' @param toDate date to stop gathering R data. Should have class "Date"
+#' @param verbose  whether to print progress 
 #' @export
 #' @import rvest
 #' @return A list containing all exercises and all food items eaten
-#' @aliases
 #' @examples \dontrun{
 #' username = 'funchords'
 #' fromDate = as.Date('2015-08-01','%Y-%m-%d')
