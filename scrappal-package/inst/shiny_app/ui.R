@@ -22,11 +22,28 @@ shinyUI(fluidPage(
         max = "2015-12-31"),
       dateInput(inputId = "toDate",
         label = "End date",
-        value = "2015-09-01",
+        value = "2015-07-15",
         min = "2015-01-01",
         max = "2015-12-31"),
+      actionButton("sub", "Submit"),
+
       br(),
-      actionButton("sub", "Submit")
+      br(),
+      br(),
+      strong("For nutrition\nrecommendations:"),
+      br(),
+      br(),
+       selectInput("Input1", "Choose which nutri to view",
+            choices = c('calories' = 'calories', 
+            'carbs' = 'carbs',
+            'fat' = 'fat',
+            'protein' = 'protein',
+            'cholest' = 'cholest',
+            'sodium' = 'sodium',
+            'sugars' = 'sugars',
+            'fiber' = 'fiber')),
+        numericInput(inputId='weight', label='weight (lbs)', value = 150, min = 70, max=300),
+        numericInput(inputId='activity', label='activity', value = 30, min=20, max=40)
     ),
     mainPanel(
       tabsetPanel(
@@ -34,22 +51,21 @@ shinyUI(fluidPage(
           "contents"),
         tabPanel("Weekly Nutrition",
           plotOutput("dailyIntakePlot"),
-             selectInput("Input1", "Choose which nutri you wanna see",
-              choices = c('calories' = 'calories', 
-              'carbs' = 'carbs',
-              'fat' = 'fat',
-              'protein' = 'protein',
-              'cholest' = 'cholest',
-              'sodium' = 'sodium',
-              'sugars' = 'sugars',
-              'fiber' = 'fiber')),
-          textInput(inputId='weight', label='weight (lbs)', value = 150),
-          textInput(inputId='activity', label='activity (?)', value = 3)
+          selectInput('mealBreak','Break nutrition down by meal',
+            choices = c('yes' = 'TRUE', 
+            'no' = 'FALSE'), selected = 'FALSE'
+            )
         ),
-        tabPanel("Trends",
-           plotOutput("plot2")),
         tabPanel("Weekly Exercise",
-           plotOutput("dailyExercisePlot"))
+           plotOutput("dailyExercisePlot"),
+           selectInput("exerciseChoice", "Choose which exercise metric to view",
+            choices = c('calories burned' = 'calories', 
+            'minutes' = 'minutes',
+            'sets' = 'sets',
+            'reps' = 'reps'))
+           ),
+        tabPanel("Trends",
+           plotOutput("trendsPlot"))
   )
 )
 )

@@ -2,6 +2,7 @@ library(shiny)
 library(scrappal)
 library(ggplot2)
 library(httr)
+library(dplyr)
 
 # dat <- z$food
 
@@ -40,16 +41,20 @@ shinyServer(
                 scrappal(username = input$username,
                         fromDate = input$fromDate,
                         toDate = input$toDate,
-                        includeDailyCal = TRUE)
+                        includeDailyCal = TRUE,
+                        verbose=TRUE)
         })
         
         ######### Reccomendations
 
         recommendationDF <- reactive({ 
+            # browser()
+            recomCalories <- as.numeric(input$activity) * (as.numeric(input$weight) / 2.2046)
+
             rec<-c()
             rec$carbs <- 292 #
             rec$fat <- ((recomCalories) / 7.7) * 0.35 ## with formula
-            rec$protein <- input$weight * 0.36 ## with formula 
+            rec$protein <- as.numeric(input$weight) * 0.36 ## with formula 
             rec$cholest <- 300 #
             rec$sodium <- 2300 #
             # Recommendation for male is 36g and for female is 24g (can we figure out the gender of users?)
@@ -57,8 +62,9 @@ shinyServer(
             # Recommendation for male is 38g and for female is 25g
             rec$fiber <- 38 #
 
-            recomCalories <- input$activity * (input$weight / 2.2046)
             rec$calories <- round(recomCalories, 2)
+
+            rec
         })
 
 
@@ -66,22 +72,29 @@ shinyServer(
         output$dailyIntakePlot <- renderPlot({
                 dailySummaryPlot(dataTable = z()$food,
                                  outcome = as.character(input$Input1),
-                                 alsoMeal = TRUE)
+                                 alsoMeal = as.logical(input$mealBreak),
+                                 recommend = unlist(recommendationDF()[input$Input1]))
         })
         
-        output$plot3 <- renderPlot({
-                dailySummaryPlot(dataTable = z()$exercise,
-                                 outcome = as.character(input$Input1),
-                                 alsoMeal = FALSE,
-                                 title=paste('Exercise: ',as.character(input$Input1),' per day'))
+        output$dailyExercisePlot <- renderPlot({
+            dailySummaryPlot(dataTable = z()$exercise,
+                 outcome = as.character(input$exerciseChoice),
+                 alsoMeal = FALSE,
+                 title=paste('Exercise: ',as.character(input$exerciseChoice),'per day'))
         })
 
         #Need to display this plot... doen't work..
-        output$dailyExercisePlot <- renderPlot({
-            total <- tapply(z()[input$Input1], z()["day"], sum)
-            plot(unique(z()$day), total, type = "l",
-               xlab = "Time period", ylab = "Amount")
-            abline(h = recommendationDF()[input$Input1], col = "red")
+        output$trendsPlot <- renderPlot({
+            # browser()
+            mutate(z()$food,
+                outcomeVar = get(input$Input1, envir=as.environment(z()$food))) %>%
+                group_by(day)%>%
+                summarize(totalNutri=sum(outcomeVar)) %>%
+            ggplot(data=.)+geom_line(aes(y=totalNutri,x=day))+
+                labs(x = "Time period", y = input$Input1) +
+                expand_limits(y = unlist(recommendationDF()[input$Input1])) + 
+                geom_abline(intercept = unlist(recommendationDF()[input$Input1]),slope=0, col='darkgreen', lty=2, lwd=.7)
+
         })
     }
 )
