@@ -13,7 +13,7 @@ shinyUI(fluidPage(
     sidebarPanel(
       strong("Instructions:"),
       p("Some text"),
-      textInput(inputId = "username", label = "Username", value = "funchords"),
+      textInput(inputId = "username", label = "Username", value = "scrappal"),
       # textInput(inputId = "password", label = "Password", value = ""),
       dateInput(inputId = "fromDate",
         label = "Start date",
