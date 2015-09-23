@@ -24,6 +24,7 @@ install(packagePath)
 library(scrappal)
 help(package='scrappal')
 
+runApp('shiny_app')
 
 
  
