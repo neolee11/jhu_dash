@@ -23,6 +23,8 @@ caloriesDF <- cbind(dateCalories, calories)
 
 ## parse calories burned data
 # load XML
+
+
 caloriesBurnedData <- xmlTreeParse("data/caloriesBurned90.xml")
 caloriesBurnedXML <- xmlToList(caloriesBurnedData)
 
@@ -32,6 +34,34 @@ rownames(caloriesBurnedChart)<-c()
 caloriesBurnedDF<-data.frame(caloriesBurnedChart)
 caloriesBurnedDF$caloriesBurned <- as.numeric(caloriesBurnedDF$caloriesBurned)
 
+
+xmlToChart <- function(path){
+	fileData <- xmlTreeParse(path)
+	fileXML <- xmlToList(fileData)
+
+	fileChart <- fileXML$chart_data[-1,]
+	colnames(fileChart)<-c('date','caloriesBurned')
+	rownames(fileChart)<-c()
+	df<-data.frame(fileChart)
+	df$caloriesBurned <- as.numeric(df$caloriesBurned)
+
+	df
+}
+
+dataFiles <- dir('data')
+xmlFiles<-dataFiles[grep('xml',dataFiles)]
+
+chartList<- list()
+for(i in 1:length(xmlFiles)){
+	chartList[[i]] <- xmlToChart(paste0('data/',xmlFiles[i]))
+}
+merge(chartList)
+
+
+caloriesBurned <- xmlToChart("data/caloriesBurned90.xml")
+carbs90 <- xmlToChart("data/carbs90.xml")
+head(caloriesBurned)
+head(carbs90)
 
 # create calories burned data frame
 caloriesBurnedDF <- cbind(dateCaloriesBurned, caloriesBurned)
