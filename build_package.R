@@ -24,7 +24,9 @@ install(packagePath)
 library(scrappal)
 help(package='scrappal')
 
-runApp('shiny_app')
+runScrappalApp()
+#OR:
+runApp(paste0(packagePath,'/inst/shiny_app'))
 
 
  

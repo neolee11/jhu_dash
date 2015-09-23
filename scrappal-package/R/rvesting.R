@@ -48,6 +48,8 @@ palUrlData<-paste0('http://www.myfitnesspal.com/reports/printable_diary/',userna
 	as.character(toDate,   format='%Y-%m-%d')
 	)
 
+if(!is.null(password)){ if(password==''){ password<-NULL } }
+
 if(is.null(password)){
 	sessionIn<-html_session(palUrlData)
 
